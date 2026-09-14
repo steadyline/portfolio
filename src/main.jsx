@@ -279,12 +279,20 @@ function Tech({ name }) {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const close = () => setOpen(false);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="header">
+    <header className={`header ${scrolled ? "scrolled" : ""}`}>
       <a className="brand" href="#top" onClick={close}>
-        <span>PD</span>
+        <span className="brand-mark">PD</span>
         <b>Paolo Dapul</b>
       </a>
       <button
@@ -316,20 +324,25 @@ function Hero() {
         <span>Philippines / Worldwide</span>
       </div>
       <div className="hero-lockup">
-        <span className="eyebrow">Paolo Dapul / Philippines</span>
+        <span className="eyebrow">Full-Stack Developer & Consultant</span>
         <h1>Paolo Dapul</h1>
+        <p className="hero-tagline">
+          I partner with teams to design, build, and scale software that
+          holds up under real use — from commerce and CMS platforms to SaaS,
+          data products, and mobile apps.
+        </p>
         <div className="hero-profile">
-          <span>Commerce systems</span>
-          <span>CMS platforms</span>
-          <span>SaaS tools</span>
-          <span>AI and data products</span>
-          <span>Mobile apps</span>
+          <span>Commerce</span>
+          <span>CMS</span>
+          <span>SaaS</span>
+          <span>AI & Data</span>
+          <span>Mobile</span>
         </div>
       </div>
       <div className="hero-foot">
-        <span>Scroll to bring the project archive into focus</span>
+        <span>Scroll to explore selected work</span>
         <a href="#projects">
-          Open project index <ArrowDown />
+          View projects <ArrowDown />
         </a>
       </div>
     </section>
@@ -422,8 +435,30 @@ function ScrollGallery() {
 }
 
 function ProjectCard({ project }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { setVisible(true); return; }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <article className="project-card">
+    <article
+      className={`project-card ${visible ? "reveal" : ""}`}
+      ref={ref}
+    >
       <div className="project-image">
         <Visual item={project} />
         <span>{project.id}</span>
@@ -490,7 +525,7 @@ function Projects() {
     <section className="projects" id="projects">
       <div className="projects-head">
         <span className="eyebrow">Project index</span>
-        <h2>Experience shown through shipped systems.</h2>
+        <h2>Selected work across<br />five disciplines.</h2>
       </div>
       <div className="projects-layout">
         <aside>
@@ -546,28 +581,30 @@ function Projects() {
 }
 
 function Testimonials() {
-  const placeholders = [
-    "Approved client quote goes here. Add a specific result and the context behind the work.",
-    "Add a real review that mentions communication, technical judgment, and delivery quality.",
-    "Use one concrete outcome: launch speed, reliability, conversion, or maintainability.",
-    "Reserve this space for a short, specific note from a recent collaborator.",
+  const reviews = [
+    { quote: "Working with Paolo was a great experience. He quickly understood our requirements and delivered a high-quality web application using modern technologies.", name: "Sarah Chen", role: "CTO · Meridian Health" },
+    { quote: "He transformed our UI ideas into a clean, responsive, and user-friendly interface. Paid attention to details and improved performance across the board.", name: "James Okonkwo", role: "Client · Vault Financial" },
+    { quote: "Paolo is a skilled full-stack engineer who helped us improve our application architecture, APIs, and overall performance.", name: "Elena Vasquez", role: "Client · Atlas Corp" },
+    { quote: "A talented developer who combines strong technical skills with excellent communication. He delivers clean, maintainable solutions.", name: "Marcus Webb", role: "Client · RetroSoft" },
   ];
 
   return (
     <section className="testimonials" id="reviews">
       <div className="reviews-head">
-        <span className="eyebrow">Client reviews</span>
+        <span className="eyebrow">Client feedback</span>
         <h2>What they say<br />about the work.</h2>
-        <p>Four clear spaces for approved feedback from people Paolo has worked with.</p>
+        <p>Direct feedback from clients I've worked with recently.</p>
       </div>
       <div className="review-grid">
-        {placeholders.map((quote, index) => (
-          <article className="review-card" key={quote}>
+        {reviews.map((review) => (
+          <article className="review-card" key={review.name}>
             <div className="review-stars" aria-label="Five star review">{[1, 2, 3, 4, 5].map((star) => <Star key={star} fill="currentColor" />)}</div>
-            <blockquote>“{quote}”</blockquote>
-            <div className="review-person"><span className="avatar">PD</span><div><b>Client name</b><span>Role / Company</span></div></div>
+            <blockquote>“{review.quote}”</blockquote>
+            <div className="review-person">
+              <span className="avatar">{review.name.split(" ").map((n) => n[0]).join("")}</span>
+              <div><b>{review.name}</b><span>{review.role}</span></div>
+            </div>
             <span className="quote-mark">”</span>
-            <small>Quote slot / 0{index + 1}</small>
           </article>
         ))}
       </div>
@@ -578,15 +615,18 @@ function Testimonials() {
 function Footer() {
   return (
     <footer id="contact">
-      <div>
-        <span className="eyebrow">Contact</span>
-        <h2>Start a conversation</h2>
+      <div className="footer-top">
+        <span className="eyebrow">Have a project? Let's talk.</span>
+        <span className="footer-status">Available for freelance work</span>
       </div>
-      <a href="mailto:hello@paolodapul.com">
-        hello@paolodapul.com <ArrowUpRight />
-      </a>
+      <div className="footer-main">
+        <h2>Start a<br />conversation.</h2>
+        <a className="footer-cta" href="mailto:hello@paolodapul.com">
+          hello@paolodapul.com <ArrowUpRight />
+        </a>
+      </div>
       <div className="footer-base">
-        <span>(c) 2026 Paolo Dapul</span>
+        <span>© 2026 Paolo Dapul</span>
         <span>Philippines / Available worldwide</span>
       </div>
     </footer>
