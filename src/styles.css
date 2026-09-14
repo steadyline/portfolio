@@ -65,17 +65,35 @@ img {
   inset: 0 0 auto;
   z-index: 100;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 0 max(22px, calc((100vw - 1280px) / 2));
   border-bottom: 1px solid var(--line);
   background: rgba(8, 10, 15, 0.84);
   backdrop-filter: blur(18px);
 }
-.header-space {
-  display: block;
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--cyan);
+  color: #041017;
+  font-size: 10px;
+  font-weight: 700;
+}
+.brand b {
+  font-size: 13px;
+  font-weight: 600;
 }
 .header nav {
+  justify-self: center;
   display: flex;
   gap: 34px;
   color: #969da8;
@@ -87,8 +105,13 @@ img {
 .header nav a:hover {
   color: #fff;
 }
-.availability {
+.header-actions {
   justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.availability {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -103,6 +126,25 @@ img {
   border-radius: 50%;
   background: #44df99;
   box-shadow: 0 0 12px #44df99;
+}
+.header-contact {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border: 1px solid var(--cyan);
+  border-radius: 100px;
+  color: var(--cyan);
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+.header-contact:hover {
+  background: var(--cyan);
+  color: #041017;
+}
+.header-contact svg {
+  width: 13px;
 }
 .menu {
   display: none;
@@ -205,11 +247,11 @@ img {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  transform: translateY(-30vh) scale(0.82) rotateX(10deg) rotateZ(14deg);
+  transform: translateY(-22vh) scale(0.9) rotateX(6deg) rotateZ(10deg);
   transform-origin: center bottom;
   transform-style: preserve-3d;
-  filter: blur(8px);
-  opacity: 0.78;
+  filter: blur(4px);
+  opacity: 0.88;
   will-change: transform, filter, opacity;
 }
 .gallery-titlebar {
@@ -268,14 +310,18 @@ img {
   display: grid;
   grid-template-columns: 28px 1fr 20px;
   align-items: end;
-  padding: 52px 14px 13px;
-  background: linear-gradient(transparent, rgba(4, 6, 9, 0.92));
-  opacity: 0.52;
+  padding: 60px 16px 15px;
+  background: linear-gradient(transparent, rgba(4, 6, 9, 0.94));
+  opacity: 0.85;
+  transition: opacity 0.25s;
+}
+.gallery-card:hover .gallery-overlay {
+  opacity: 1;
 }
 .gallery-overlay > span,
 .gallery-overlay small {
-  color: #7d8694;
-  font: 400 8px "DM Mono";
+  color: #9aa3b0;
+  font: 400 9px "DM Mono";
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -284,10 +330,13 @@ img {
   display: block;
 }
 .gallery-overlay b {
-  font-size: 13px;
+  color: #f0f3f8;
+  font-size: 15px;
+  font-weight: 600;
 }
 .gallery-overlay svg {
   width: 15px;
+  color: var(--cyan);
 }
 .generated-visual {
   background: url("/assets/project-contact-sheet.png") no-repeat;
@@ -418,7 +467,7 @@ img {
   border-color: rgba(59, 210, 250, 0.3);
 }
 .project-image {
-  height: 184px;
+  height: 220px;
   position: relative;
   overflow: hidden;
   background: #151820;
@@ -444,7 +493,7 @@ img {
   font: 400 7px "DM Mono";
 }
 .project-body {
-  padding: 15px;
+  padding: 20px;
 }
 .project-meta {
   display: flex;
@@ -458,17 +507,17 @@ img {
   width: 14px;
 }
 .project-body h3 {
-  margin: 11px 0 6px;
-  font-size: 18px;
+  margin: 12px 0 8px;
+  font-size: 20px;
   font-weight: 600;
   letter-spacing: 0;
 }
 .project-body > p {
   min-height: 39px;
   margin: 0;
-  color: #8d95a1;
-  font-size: 10px;
-  line-height: 1.65;
+  color: #949caa;
+  font-size: 12px;
+  line-height: 1.6;
 }
 .project-proof {
   display: grid;
@@ -480,22 +529,22 @@ img {
 }
 .project-proof small {
   display: block;
-  margin-bottom: 9px;
-  color: #555e6c;
-  font: 400 7px "DM Mono";
+  margin-bottom: 10px;
+  color: #6b7484;
+  font: 500 8px "DM Mono";
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .project-proof > div:first-child > span {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-top: 6px;
-  color: #a7aeb9;
-  font-size: 8px;
+  gap: 6px;
+  margin-top: 8px;
+  color: #b8c0cc;
+  font-size: 11px;
 }
 .project-proof > div:first-child svg {
-  width: 10px;
+  width: 12px;
   color: var(--cyan);
 }
 .project-tech {
@@ -504,34 +553,43 @@ img {
   gap: 5px;
 }
 .tech {
-  height: 32px;
+  height: 34px;
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 0 9px;
+  padding: 0 10px;
   border: 1px solid rgba(139, 147, 167, 0.28);
-  border-radius: 5px;
+  border-radius: 6px;
   background: #0a0d12;
-  color: #9da5b1;
-  font: 400 9px "DM Mono";
+  color: #aab3c0;
+  font: 400 10px "DM Mono";
   white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+}
+.tech:hover {
+  border-color: rgba(59, 210, 250, 0.5);
+  color: #d4dde8;
 }
 .tech svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   fill: #8992a2;
+  transition: fill 0.2s;
+}
+.tech:hover svg {
+  fill: var(--cyan);
 }
 .tech > b {
   min-width: 14px;
-  font-size: 9px;
+  font-size: 10px;
   color: #8992a2;
 }
 
 .testimonials {
   padding: 125px max(22px, calc((100vw - 1280px) / 2));
   display: grid;
-  grid-template-columns: 0.7fr 1.3fr;
-  gap: 8vw;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 80px;
   background: #0b0e14;
   border-top: 1px solid var(--line);
 }
@@ -544,49 +602,94 @@ img {
 }
 .reviews-head p {
   color: #747d8a;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.6;
 }
-.review-placeholder {
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-.review-placeholder article {
-  min-height: 180px;
-  padding: 28px 0;
+.review-grid {
   display: grid;
-  grid-template-columns: 38px 1fr 150px;
-  gap: 20px;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
-.review-placeholder article > span {
+.review-card {
+  position: relative;
+  min-height: 280px;
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #11151d;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s, border-color 0.25s;
+  overflow: hidden;
+}
+.review-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59, 210, 250, 0.35);
+}
+.review-stars {
+  display: flex;
+  gap: 4px;
   color: var(--cyan);
-  font: 300 30px Georgia;
 }
-.review-placeholder blockquote {
-  margin: 0;
-  color: #c9ced6;
-  font-size: 16px;
-  line-height: 1.55;
-  letter-spacing: 0;
+.review-stars svg {
+  width: 16px;
+  height: 16px;
 }
-.review-placeholder footer {
-  align-self: end;
+.review-card blockquote {
+  margin: 24px 0 0;
+  color: #d3d8df;
+  font-size: 15px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.65;
+  flex: 1;
 }
-.review-placeholder footer b,
-.review-placeholder footer span {
+.review-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--cyan);
+  color: #041017;
+  font-size: 11px;
+  font-weight: 700;
+}
+.review-person b,
+.review-person span {
   display: block;
 }
-.review-placeholder footer b {
-  font-size: 10px;
+.review-person b {
+  font-size: 12px;
+  font-weight: 600;
 }
-.review-placeholder footer span {
-  margin-top: 5px;
-  color: #68717e;
-  font: 400 7px "DM Mono";
+.review-person span {
+  margin-top: 3px;
+  color: #7e8694;
+  font: 400 9px "DM Mono";
   text-transform: uppercase;
 }
-.review-placeholder article > small {
-  grid-column: 2;
-  color: #56606d;
+.quote-mark {
+  position: absolute;
+  top: 12px;
+  right: 22px;
+  color: rgba(255, 255, 255, 0.06);
+  font: 700 72px Georgia;
+  line-height: 1;
+  pointer-events: none;
+}
+.review-card > small {
+  margin-top: 16px;
+  color: #4d5666;
   font: 400 7px "DM Mono";
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -730,7 +833,7 @@ footer#contact > a svg {
   .testimonials {
     grid-template-columns: 1fr;
   }
-  .review-placeholder {
+  .review-grid {
     margin-top: 30px;
   }
 }
@@ -830,14 +933,8 @@ footer#contact > a svg {
   .testimonials {
     padding: 90px 18px;
   }
-  .review-placeholder article {
-    grid-template-columns: 26px 1fr;
-  }
-  .review-placeholder article > footer {
-    grid-column: 2;
-  }
-  .review-placeholder article > small {
-    grid-column: 2;
+  .review-grid {
+    grid-template-columns: 1fr;
   }
   footer#contact {
     padding: 58px 18px 22px;

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { ArrowDown, ArrowUp, ArrowUpRight, Check, Menu, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpRight, Check, Menu, Star, X } from "lucide-react";
 import {
   siAlgolia,
   siContentful,
@@ -283,7 +283,10 @@ function Header() {
 
   return (
     <header className="header">
-      <span className="header-space" aria-hidden="true" />
+      <a className="brand" href="#top" onClick={close}>
+        <span>PD</span>
+        <b>Paolo Dapul</b>
+      </a>
       <button
         className="menu"
         onClick={() => setOpen(!open)}
@@ -293,19 +296,14 @@ function Header() {
         {open ? <X /> : <Menu />}
       </button>
       <nav className={open ? "open" : ""} aria-label="Main navigation">
-        <a onClick={close} href="#projects">
-          Projects
-        </a>
-        <a onClick={close} href="#reviews">
-          Reviews
-        </a>
-        <a onClick={close} href="#contact">
-          Contact
-        </a>
+        <a onClick={close} href="#projects">Projects</a>
+        <a onClick={close} href="#reviews">Reviews</a>
+        <a onClick={close} href="#contact">Contact</a>
       </nav>
-      <a className="availability" href="mailto:hello@paolodapul.com">
-        <i /> Available
-      </a>
+      <div className="header-actions">
+        <a className="availability" href="mailto:hello@paolodapul.com"><i /> Available</a>
+        <a className="header-contact" href="mailto:hello@paolodapul.com">Let's talk <ArrowUpRight /></a>
+      </div>
     </header>
   );
 }
@@ -375,9 +373,9 @@ function ScrollGallery() {
       const focus = Math.max(0, Math.min(1, progress / 0.28));
       const travel = Math.max(0, Math.min(1, (progress - 0.2) / 0.8));
 
-      wall.current.style.transform = `translate3d(0,${-30 + focus * 30}vh,0) scale(${0.82 + focus * 0.18}) rotateX(${10 - focus * 10}deg) rotateZ(${14 - focus * 14}deg)`;
-      wall.current.style.filter = `blur(${8 - focus * 8}px)`;
-      wall.current.style.opacity = `${0.78 + focus * 0.22}`;
+      wall.current.style.transform = `translate3d(0,${-22 + focus * 22}vh,0) scale(${0.9 + focus * 0.1}) rotateX(${6 - focus * 6}deg) rotateZ(${10 - focus * 10}deg)`;
+      wall.current.style.filter = `blur(${4 - focus * 4}px)`;
+      wall.current.style.opacity = `${0.88 + focus * 0.12}`;
       rowOne.current.style.transform = `translate3d(${-travel * 66}vw,0,0)`;
       rowTwo.current.style.transform = `translate3d(${-58 + travel * 58}vw,0,0)`;
       title.current.style.opacity = `${Math.max(0, Math.min(1, (progress - 0.1) / 0.12))}`;
@@ -549,30 +547,27 @@ function Projects() {
 
 function Testimonials() {
   const placeholders = [
-    "Verified client quote goes here. Use a specific result, not a generic compliment.",
+    "Approved client quote goes here. Add a specific result and the context behind the work.",
     "Add a real review that mentions communication, technical judgment, and delivery quality.",
-    "Use one concrete outcome: revenue, launch speed, reliability, conversion, or maintainability.",
+    "Use one concrete outcome: launch speed, reliability, conversion, or maintainability.",
+    "Reserve this space for a short, specific note from a recent collaborator.",
   ];
 
   return (
     <section className="testimonials" id="reviews">
       <div className="reviews-head">
         <span className="eyebrow">Client reviews</span>
-        <h2>Reference-ready review cards.</h2>
-        <p>
-          Reserved for real testimonials once Paolo provides approved quotes.
-        </p>
+        <h2>What they say<br />about the work.</h2>
+        <p>Four clear spaces for approved feedback from people Paolo has worked with.</p>
       </div>
-      <div className="review-placeholder">
+      <div className="review-grid">
         {placeholders.map((quote, index) => (
-          <article key={quote}>
-            <span>"</span>
-            <blockquote>{quote}</blockquote>
-            <footer>
-              <b>Client name</b>
-              <span>Role / Company</span>
-            </footer>
-            <small>Verified quote slot / 0{index + 1}</small>
+          <article className="review-card" key={quote}>
+            <div className="review-stars" aria-label="Five star review">{[1, 2, 3, 4, 5].map((star) => <Star key={star} fill="currentColor" />)}</div>
+            <blockquote>“{quote}”</blockquote>
+            <div className="review-person"><span className="avatar">PD</span><div><b>Client name</b><span>Role / Company</span></div></div>
+            <span className="quote-mark">”</span>
+            <small>Quote slot / 0{index + 1}</small>
           </article>
         ))}
       </div>
