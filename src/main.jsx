@@ -435,30 +435,8 @@ function ScrollGallery() {
 }
 
 function ProjectCard({ project }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) { setVisible(true); return; }
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -60px 0px" },
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <article
-      className={`project-card ${visible ? "reveal" : ""}`}
-      ref={ref}
-    >
+    <article className="project-card">
       <div className="project-image">
         <Visual item={project} />
         <span>{project.id}</span>
@@ -496,29 +474,74 @@ function ProjectCard({ project }) {
 
 function Projects() {
   const [active, setActive] = useState(categories[0]);
+  const sceneRef = useRef(null);
+  const trackRef = useRef(null);
+  const groupsRef = useRef([]);
 
   useEffect(() => {
-    const nodes = [...document.querySelectorAll(".project-group")];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || innerWidth < 900) return;
 
-        if (visible) setActive(visible.target.dataset.category);
-      },
-      { rootMargin: "-18% 0px -58% 0px", threshold: [0, 0.25, 0.5] },
-    );
+    let raf;
+    const scene = sceneRef.current;
+    const track = trackRef.current;
+    if (!scene || !track) return;
 
-    nodes.forEach((node) => observer.observe(node));
-    return () => observer.disconnect();
+    const render = () => {
+      raf = null;
+      const rect = scene.getBoundingClientRect();
+      const sceneHeight = scene.offsetHeight - innerHeight;
+      const progress = Math.max(0, Math.min(1, -rect.top / Math.max(sceneHeight, 1)));
+
+      const trackWidth = track.scrollWidth - innerWidth + 48;
+      const x = -progress * trackWidth;
+      track.style.transform = `translate3d(${x}px,0,0)`;
+
+      const groups = groupsRef.current.filter(Boolean);
+      const centerX = innerWidth / 2;
+      groups.forEach((group) => {
+        const gRect = group.getBoundingClientRect();
+        const gCenter = gRect.left + gRect.width / 2;
+        const dist = Math.abs(gCenter - centerX);
+        const maxDist = innerWidth * 0.6;
+        const closeness = Math.max(0, 1 - dist / maxDist);
+        group.style.opacity = `${0.35 + closeness * 0.65}`;
+        group.style.transform = `scale(${0.92 + closeness * 0.08})`;
+        if (closeness > 0.55 && group.dataset.category !== active) {
+          setActive(group.dataset.category);
+        }
+      });
+    };
+
+    const update = () => {
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    render();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+    return () => {
+      removeEventListener("scroll", update);
+      removeEventListener("resize", update);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const goTo = (category) => {
     setActive(category);
-    document
-      .getElementById(slug(category))
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const group = groupsRef.current.find(
+      (g) => g && g.dataset.category === category,
+    );
+    if (group) {
+      const scene = sceneRef.current;
+      const track = trackRef.current;
+      const sceneHeight = scene.offsetHeight - innerHeight;
+      const trackWidth = track.scrollWidth - innerWidth + 48;
+      const groupLeft = group.offsetLeft;
+      const progress = groupLeft / Math.max(trackWidth, 1);
+      const targetY = scene.offsetTop + progress * sceneHeight;
+      window.scrollTo({ top: targetY, behavior: "smooth" });
+    }
   };
 
   return (
@@ -546,35 +569,61 @@ function Projects() {
             </button>
           ))}
         </aside>
-        <div className="project-groups">
-          {categories.map((category, index) => (
-            <section
-              className="project-group"
-              id={slug(category)}
-              data-category={category}
-              key={category}
-            >
-              <header>
-                <span>0{index + 1}</span>
-                <h3>{category}</h3>
-                <span>
-                  {
-                    projects.filter((project) => project.category === category)
-                      .length
-                  }{" "}
-                  projects
-                </span>
-              </header>
-              <div className="project-grid">
-                {projects
-                  .filter((project) => project.category === category)
-                  .map((project) => (
-                    <ProjectCard key={project.id} project={project} />
-                  ))}
-              </div>
-            </section>
-          ))}
+      </div>
+      <div className="projects-scene" ref={sceneRef}>
+        <div className="projects-sticky">
+          <div className="projects-track" ref={trackRef}>
+            {categories.map((category, index) => (
+              <section
+                className="project-group"
+                id={slug(category)}
+                data-category={category}
+                key={category}
+                ref={(el) => (groupsRef.current[index] = el)}
+              >
+                <header>
+                  <span>0{index + 1}</span>
+                  <h3>{category}</h3>
+                  <span>
+                    {projects.filter((p) => p.category === category).length} projects
+                  </span>
+                </header>
+                <div className="project-grid">
+                  {projects
+                    .filter((p) => p.category === category)
+                    .map((project) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                </div>
+              </section>
+            ))}
+          </div>
         </div>
+      </div>
+      <div className="projects-mobile">
+        {categories.map((category, index) => (
+          <section
+            className="project-group"
+            id={`${slug(category)}-m`}
+            data-category={category}
+            key={category}
+          >
+            <header>
+              <span>0{index + 1}</span>
+              <h3>{category}</h3>
+              <span>
+                {projects.filter((p) => p.category === category).length} projects
+              </span>
+            </header>
+            <div className="project-grid">
+              {projects
+                .filter((p) => p.category === category)
+                .map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+            </div>
+          </section>
+        ))}
       </div>
     </section>
   );
