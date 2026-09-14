@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#10100f"/>
+  <path d="M0 120h1200M0 400h1200M310 0v800M860 0v800" stroke="#343430" stroke-width="1"/>
+  <text x="65" y="82" fill="#f0eee8" font-family="Arial" font-size="22" letter-spacing="5">NORTH / FINANCIAL SYSTEM</text>
+  <text x="62" y="350" fill="#f0eee8" font-family="Arial" font-size="126" font-weight="700" letter-spacing="-9">MONEY,</text>
+  <text x="62" y="470" fill="#dfff37" font-family="Georgia" font-size="125" font-style="italic">made lucid.</text>
+  <g transform="translate(790 130)">
+    <rect width="290" height="540" rx="42" fill="#e8e5dc"/>
+    <rect x="22" y="28" width="246" height="190" rx="24" fill="#dfff37"/>
+    <circle cx="56" cy="65" r="12" fill="#10100f"/>
+    <path d="M45 170 100 120l55 30 75-80" fill="none" stroke="#10100f" stroke-width="5"/>
+    <rect x="22" y="246" width="246" height="72" rx="18" fill="#ccc8bd"/>
+    <rect x="22" y="340" width="118" height="160" rx="18" fill="#ff5b43"/>
+    <rect x="150" y="340" width="118" height="160" rx="18" fill="#242421"/>
+  </g>
+</svg>

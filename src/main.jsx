@@ -1,0 +1,641 @@
+import React, { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { ArrowDown, ArrowUp, ArrowUpRight, Check, Menu, X } from "lucide-react";
+import {
+  siAlgolia,
+  siContentful,
+  siDocker,
+  siExpo,
+  siFastapi,
+  siFigma,
+  siFirebase,
+  siFlutter,
+  siGoogleanalytics,
+  siGooglecloud,
+  siGooglemaps,
+  siJavascript,
+  siLaravel,
+  siMysql,
+  siNextdotjs,
+  siNodedotjs,
+  siPhp,
+  siPostgresql,
+  siPython,
+  siReact,
+  siRedis,
+  siSanity,
+  siShopify,
+  siStripe,
+  siTailwindcss,
+  siTypescript,
+  siVercel,
+  siWordpress,
+} from "simple-icons";
+import "./styles.css";
+
+const projects = [
+  {
+    id: "01",
+    title: "Commerce Platform",
+    category: "Commerce",
+    type: "Retail technology",
+    summary:
+      "A scalable storefront and operations layer for browsing, checkout, orders, and catalogue management.",
+    features: [
+      "Layered product discovery",
+      "Checkout and order operations",
+      "Admin catalogue controls",
+    ],
+    stack: ["React", "TypeScript", "Node.js", "PostgreSQL", "Stripe"],
+    asset: "/assets/project-commerce.svg",
+  },
+  {
+    id: "02",
+    title: "Multi-vendor Marketplace",
+    category: "Commerce",
+    type: "Platform commerce",
+    summary:
+      "Vendor-managed catalogue, routing, commissions, and reporting for marketplace teams.",
+    features: ["Vendor workspaces", "Commission logic", "Order routing"],
+    stack: ["Next.js", "Node.js", "PostgreSQL", "Redis", "Docker"],
+    asset: "/assets/project-finance.svg",
+  },
+  {
+    id: "03",
+    title: "Subscription Commerce",
+    category: "Commerce",
+    type: "Direct-to-consumer",
+    summary:
+      "Recurring-order experience with account management, retention flows, and campaign support.",
+    features: [
+      "Subscription lifecycle",
+      "Customer self-service",
+      "Campaign integration",
+    ],
+    stack: ["Shopify", "Liquid", "JavaScript", "Recharge", "Klaviyo"],
+    crop: "crop-commerce",
+  },
+  {
+    id: "04",
+    title: "Content & Growth System",
+    category: "CMS",
+    type: "Publishing ecosystem",
+    summary:
+      "Composable publishing for fast campaign pages, structured content, SEO, and localization.",
+    features: [
+      "Visual publishing",
+      "SEO and localization",
+      "Reusable page modules",
+    ],
+    stack: ["Next.js", "Sanity", "Tailwind", "Vercel", "Analytics"],
+    crop: "crop-culture",
+  },
+  {
+    id: "05",
+    title: "Property Portfolio CMS",
+    category: "CMS",
+    type: "Real-estate platform",
+    summary:
+      "Structured property publishing with inquiry capture and editorial workflows for real-estate teams.",
+    features: [
+      "Property catalogue",
+      "Lead capture workflows",
+      "Editorial approval",
+    ],
+    stack: ["WordPress", "PHP", "MySQL", "ACF", "JavaScript"],
+    asset: "/assets/project-culture.svg",
+  },
+  {
+    id: "06",
+    title: "Knowledge Publishing Hub",
+    category: "CMS",
+    type: "Content platform",
+    summary:
+      "High-volume editorial system with modular content, indexed search, and fast release cycles.",
+    features: [
+      "Structured content model",
+      "Fast indexed search",
+      "Role-based editing",
+    ],
+    stack: ["Next.js", "Contentful", "Algolia", "Vercel", "TypeScript"],
+    asset: "/assets/project-commerce.svg",
+  },
+  {
+    id: "07",
+    title: "Booking Operations",
+    category: "SaaS",
+    type: "Reservation platform",
+    summary:
+      "Customer booking flows connected to availability, payments, refunds, and staff operations.",
+    features: [
+      "Availability engine",
+      "Payments and refunds",
+      "Operations dashboard",
+    ],
+    stack: ["React", "Laravel", "MySQL", "Stripe", "AWS"],
+    asset: "/assets/project-field.svg",
+  },
+  {
+    id: "08",
+    title: "Operations Control Room",
+    category: "SaaS",
+    type: "Internal platform",
+    summary:
+      "A unified workspace for queues, permissions, audit trails, automations, and reporting.",
+    features: [
+      "Workflow automation",
+      "Audit and access control",
+      "Operational reporting",
+    ],
+    stack: ["React", "Node.js", "PostgreSQL", "Redis", "Docker"],
+    crop: "crop-finance",
+  },
+  {
+    id: "09",
+    title: "Analytics Intelligence",
+    category: "AI & Data",
+    type: "Decision-support product",
+    summary:
+      "Operational intelligence workspace with metric visibility, reporting, and assisted recommendations.",
+    features: [
+      "Live metric visualization",
+      "Role-based reporting",
+      "Recommendation flows",
+    ],
+    stack: ["Next.js", "Python", "FastAPI", "PostgreSQL", "OpenAI"],
+    crop: "crop-finance",
+  },
+  {
+    id: "10",
+    title: "Predictive Sports Product",
+    category: "AI & Data",
+    type: "Analytics platform",
+    summary:
+      "Data-rich sports interface with modelling, saved analysis views, and explainable insights.",
+    features: [
+      "Prediction workflows",
+      "Saved analysis views",
+      "Data model integration",
+    ],
+    stack: ["React", "Python", "FastAPI", "PostgreSQL", "AWS"],
+    crop: "crop-field",
+  },
+  {
+    id: "11",
+    title: "Mobile Service Platform",
+    category: "Mobile",
+    type: "Consumer product",
+    summary:
+      "Location-aware service experience designed for quick booking, dependable updates, and daily use.",
+    features: [
+      "Maps and location flows",
+      "Offline-aware states",
+      "Push-ready architecture",
+    ],
+    stack: ["React Native", "Expo", "Firebase", "Maps", "TypeScript"],
+    crop: "crop-field",
+  },
+  {
+    id: "12",
+    title: "Connected Field App",
+    category: "Mobile",
+    type: "Workforce product",
+    summary:
+      "Mobile workflows connecting field teams to central operations, realtime sync, and task tracking.",
+    features: [
+      "Offline data capture",
+      "Realtime synchronization",
+      "Field task flows",
+    ],
+    stack: ["Flutter", "Firebase", "Cloud Functions", "Maps", "Figma"],
+    asset: "/assets/project-field.svg",
+  },
+];
+
+const categories = ["Commerce", "CMS", "SaaS", "AI & Data", "Mobile"];
+const galleryProjects = projects;
+
+const techIcons = {
+  React: siReact,
+  "React Native": siReact,
+  "Next.js": siNextdotjs,
+  TypeScript: siTypescript,
+  "Node.js": siNodedotjs,
+  PostgreSQL: siPostgresql,
+  Stripe: siStripe,
+  Python: siPython,
+  FastAPI: siFastapi,
+  Laravel: siLaravel,
+  MySQL: siMysql,
+  Redis: siRedis,
+  Docker: siDocker,
+  Expo: siExpo,
+  Firebase: siFirebase,
+  Maps: siGooglemaps,
+  Sanity: siSanity,
+  Tailwind: siTailwindcss,
+  Vercel: siVercel,
+  WordPress: siWordpress,
+  PHP: siPhp,
+  JavaScript: siJavascript,
+  Shopify: siShopify,
+  Liquid: siShopify,
+  Flutter: siFlutter,
+  Figma: siFigma,
+  Contentful: siContentful,
+  Algolia: siAlgolia,
+  Analytics: siGoogleanalytics,
+  ACF: siWordpress,
+  "Cloud Functions": siGooglecloud,
+};
+
+const slug = (value) =>
+  value.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+
+function Visual({ item }) {
+  if (item.asset) {
+    return <img src={item.asset} alt="" loading="lazy" />;
+  }
+
+  return <div className={`generated-visual ${item.crop}`} aria-hidden="true" />;
+}
+
+function Tech({ name }) {
+  const icon = techIcons[name];
+
+  return (
+    <span className="tech" title={name}>
+      {icon ? (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d={icon.path} />
+        </svg>
+      ) : (
+        <b>{name.slice(0, 2)}</b>
+      )}
+      <span>{name}</span>
+    </span>
+  );
+}
+
+function Header() {
+  const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+
+  return (
+    <header className="header">
+      <span className="header-space" aria-hidden="true" />
+      <button
+        className="menu"
+        onClick={() => setOpen(!open)}
+        aria-label="Toggle navigation"
+        aria-expanded={open}
+      >
+        {open ? <X /> : <Menu />}
+      </button>
+      <nav className={open ? "open" : ""} aria-label="Main navigation">
+        <a onClick={close} href="#projects">
+          Projects
+        </a>
+        <a onClick={close} href="#reviews">
+          Reviews
+        </a>
+        <a onClick={close} href="#contact">
+          Contact
+        </a>
+      </nav>
+      <a className="availability" href="mailto:hello@paolodapul.com">
+        <i /> Available
+      </a>
+    </header>
+  );
+}
+
+function Hero() {
+  return (
+    <section className="hero" id="top">
+      <div className="hero-index">
+        <span>Portfolio / 2026</span>
+        <span>Philippines / Worldwide</span>
+      </div>
+      <div className="hero-lockup">
+        <span className="eyebrow">Paolo Dapul / Philippines</span>
+        <h1>Paolo Dapul</h1>
+        <div className="hero-profile">
+          <span>Commerce systems</span>
+          <span>CMS platforms</span>
+          <span>SaaS tools</span>
+          <span>AI and data products</span>
+          <span>Mobile apps</span>
+        </div>
+      </div>
+      <div className="hero-foot">
+        <span>Scroll to bring the project archive into focus</span>
+        <a href="#projects">
+          Open project index <ArrowDown />
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function GalleryCard({ project }) {
+  return (
+    <article className="gallery-card">
+      <Visual item={project} />
+      <div className="gallery-overlay">
+        <span>{project.id}</span>
+        <div>
+          <b>{project.title}</b>
+          <small>{project.category}</small>
+        </div>
+        <ArrowUpRight />
+      </div>
+    </article>
+  );
+}
+
+function ScrollGallery() {
+  const section = useRef(null);
+  const wall = useRef(null);
+  const rowOne = useRef(null);
+  const rowTwo = useRef(null);
+  const title = useRef(null);
+
+  useEffect(() => {
+    let raf;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const render = () => {
+      raf = null;
+      if (!section.current || reduce || innerWidth < 800) return;
+
+      const rect = section.current.getBoundingClientRect();
+      const range = section.current.offsetHeight - innerHeight;
+      const progress = Math.max(0, Math.min(1, -rect.top / Math.max(range, 1)));
+      const focus = Math.max(0, Math.min(1, progress / 0.28));
+      const travel = Math.max(0, Math.min(1, (progress - 0.2) / 0.8));
+
+      wall.current.style.transform = `translate3d(0,${-30 + focus * 30}vh,0) scale(${0.82 + focus * 0.18}) rotateX(${10 - focus * 10}deg) rotateZ(${14 - focus * 14}deg)`;
+      wall.current.style.filter = `blur(${8 - focus * 8}px)`;
+      wall.current.style.opacity = `${0.78 + focus * 0.22}`;
+      rowOne.current.style.transform = `translate3d(${-travel * 66}vw,0,0)`;
+      rowTwo.current.style.transform = `translate3d(${-58 + travel * 58}vw,0,0)`;
+      title.current.style.opacity = `${Math.max(0, Math.min(1, (progress - 0.1) / 0.12))}`;
+    };
+
+    const update = () => {
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+
+    render();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+
+    return () => {
+      removeEventListener("scroll", update);
+      removeEventListener("resize", update);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <section className="gallery-scene" ref={section}>
+      <div className="gallery-sticky">
+        <div className="gallery-wall" ref={wall}>
+          <div className="gallery-titlebar" ref={title}>
+            <span>Project reel</span>
+            <strong>Selected work</strong>
+            <span>Scroll / explore</span>
+          </div>
+          <div className="gallery-row" ref={rowOne}>
+            {galleryProjects.slice(0, 6).map((project) => (
+              <GalleryCard key={project.id} project={project} />
+            ))}
+          </div>
+          <div className="gallery-row" ref={rowTwo}>
+            {galleryProjects.slice(6).map((project) => (
+              <GalleryCard key={project.id} project={project} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectCard({ project }) {
+  return (
+    <article className="project-card">
+      <div className="project-image">
+        <Visual item={project} />
+        <span>{project.id}</span>
+      </div>
+      <div className="project-body">
+        <div className="project-meta">
+          <span>{project.type}</span>
+          <ArrowUpRight />
+        </div>
+        <h3>{project.title}</h3>
+        <p>{project.summary}</p>
+        <div className="project-proof">
+          <div>
+            <small>Delivered</small>
+            {project.features.map((feature) => (
+              <span key={feature}>
+                <Check />
+                {feature}
+              </span>
+            ))}
+          </div>
+          <div>
+            <small>Technology</small>
+            <div className="project-tech">
+              {project.stack.map((tech) => (
+                <Tech name={tech} key={tech} />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function Projects() {
+  const [active, setActive] = useState(categories[0]);
+
+  useEffect(() => {
+    const nodes = [...document.querySelectorAll(".project-group")];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible) setActive(visible.target.dataset.category);
+      },
+      { rootMargin: "-18% 0px -58% 0px", threshold: [0, 0.25, 0.5] },
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
+  const goTo = (category) => {
+    setActive(category);
+    document
+      .getElementById(slug(category))
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  return (
+    <section className="projects" id="projects">
+      <div className="projects-head">
+        <span className="eyebrow">Project index</span>
+        <h2>Experience shown through shipped systems.</h2>
+      </div>
+      <div className="projects-layout">
+        <aside>
+          <span>Categories</span>
+          {categories.map((category) => (
+            <button
+              className={active === category ? "active" : ""}
+              onClick={() => goTo(category)}
+              key={category}
+            >
+              <b>{category}</b>
+              <span>
+                {String(
+                  projects.filter((project) => project.category === category)
+                    .length,
+                ).padStart(2, "0")}
+              </span>
+            </button>
+          ))}
+        </aside>
+        <div className="project-groups">
+          {categories.map((category, index) => (
+            <section
+              className="project-group"
+              id={slug(category)}
+              data-category={category}
+              key={category}
+            >
+              <header>
+                <span>0{index + 1}</span>
+                <h3>{category}</h3>
+                <span>
+                  {
+                    projects.filter((project) => project.category === category)
+                      .length
+                  }{" "}
+                  projects
+                </span>
+              </header>
+              <div className="project-grid">
+                {projects
+                  .filter((project) => project.category === category)
+                  .map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  const placeholders = [
+    "Verified client quote goes here. Use a specific result, not a generic compliment.",
+    "Add a real review that mentions communication, technical judgment, and delivery quality.",
+    "Use one concrete outcome: revenue, launch speed, reliability, conversion, or maintainability.",
+  ];
+
+  return (
+    <section className="testimonials" id="reviews">
+      <div className="reviews-head">
+        <span className="eyebrow">Client reviews</span>
+        <h2>Reference-ready review cards.</h2>
+        <p>
+          Reserved for real testimonials once Paolo provides approved quotes.
+        </p>
+      </div>
+      <div className="review-placeholder">
+        {placeholders.map((quote, index) => (
+          <article key={quote}>
+            <span>"</span>
+            <blockquote>{quote}</blockquote>
+            <footer>
+              <b>Client name</b>
+              <span>Role / Company</span>
+            </footer>
+            <small>Verified quote slot / 0{index + 1}</small>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  return (
+    <footer id="contact">
+      <div>
+        <span className="eyebrow">Contact</span>
+        <h2>Start a conversation</h2>
+      </div>
+      <a href="mailto:hello@paolodapul.com">
+        hello@paolodapul.com <ArrowUpRight />
+      </a>
+      <div className="footer-base">
+        <span>(c) 2026 Paolo Dapul</span>
+        <span>Philippines / Available worldwide</span>
+      </div>
+    </footer>
+  );
+}
+
+function BackToTop() {
+  const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShow(scrollY > 500);
+    onScroll();
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <a
+      className={`back-top ${show ? "show" : ""}`}
+      href="#top"
+      aria-label="Back to top"
+    >
+      <ArrowUp />
+    </a>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <a className="skip-link" href="#projects">
+        Skip to projects
+      </a>
+      <Header />
+      <main>
+        <Hero />
+        <ScrollGallery />
+        <Projects />
+        <Testimonials />
+      </main>
+      <Footer />
+      <BackToTop />
+    </>
+  );
+}
+
+createRoot(document.getElementById("root")).render(<App />);

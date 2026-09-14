@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#ff5b43"/>
+  <circle cx="600" cy="400" r="330" fill="#11110f"/>
+  <circle cx="600" cy="400" r="235" fill="#ff5b43" stroke="#f0eee8" stroke-width="2"/>
+  <circle cx="600" cy="400" r="108" fill="#dfff37"/>
+  <path d="M0 400h1200M600 0v800" stroke="#f0eee8" stroke-width="2"/>
+  <text x="42" y="68" font-family="Arial" font-size="21" letter-spacing="5">ONE NIGHT / MANY VOICES</text>
+  <text x="205" y="430" fill="#f0eee8" font-family="Arial" font-size="118" font-weight="700" letter-spacing="-7">FREQUENCY</text>
+  <text x="465" y="755" font-family="Arial" font-size="18" letter-spacing="4">MANILA — LIVE</text>
+</svg>

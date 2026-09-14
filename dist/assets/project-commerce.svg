@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#dfff37"/>
+  <path d="M0 650 1200 240v560H0z" fill="#11110f"/>
+  <circle cx="972" cy="180" r="118" fill="none" stroke="#11110f" stroke-width="2"/>
+  <text x="62" y="100" font-family="Arial" font-size="24" letter-spacing="6">DROP / 001</text>
+  <text x="58" y="290" font-family="Arial" font-size="128" font-weight="700" letter-spacing="-8">OBJECTS</text>
+  <text x="60" y="400" font-family="Arial" font-size="128" font-weight="700" letter-spacing="-8">FOR NOW.</text>
+  <g transform="translate(650 290) rotate(10)">
+    <rect width="310" height="430" fill="#ece9df" stroke="#11110f" stroke-width="4"/>
+    <ellipse cx="155" cy="205" rx="96" ry="155" fill="#ff5b43"/>
+    <path d="M85 205h140M155 50v310" stroke="#11110f" stroke-width="3"/>
+    <text x="26" y="400" font-family="Arial" font-size="18">FORM / FUNCTION</text>
+  </g>
+</svg>
