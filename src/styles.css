@@ -336,7 +336,7 @@ img {
   position: absolute;
   inset: auto 0 0;
   display: grid;
-  grid-template-columns: 28px 1fr 20px;
+  grid-template-columns: 1fr 20px;
   align-items: end;
   padding: 60px 16px 15px;
   background: linear-gradient(transparent, rgba(4, 6, 9, 0.94));
@@ -346,7 +346,6 @@ img {
 .gallery-card:hover .gallery-overlay {
   opacity: 1;
 }
-.gallery-overlay > span,
 .gallery-overlay small {
   color: #9aa3b0;
   font: 400 9px "DM Mono";
@@ -496,9 +495,9 @@ img {
   scroll-margin-top: 90px;
 }
 .project-group > header {
-  display: grid;
-  grid-template-columns: 42px 1fr auto;
-  align-items: center;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
   margin-bottom: 28px;
   color: #606a78;
 }
@@ -549,16 +548,6 @@ img {
 }
 .project-card:hover .project-image > *:first-child {
   transform: scale(1.025);
-}
-.project-image > span {
-  position: absolute;
-  top: 11px;
-  left: 11px;
-  padding: 4px 6px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 4px;
-  background: rgba(5, 7, 10, 0.72);
-  font: 400 7px "DM Mono";
 }
 .project-body {
   padding: 24px;

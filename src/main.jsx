@@ -354,7 +354,6 @@ function GalleryCard({ project }) {
     <article className="gallery-card">
       <Visual item={project} />
       <div className="gallery-overlay">
-        <span>{project.id}</span>
         <div>
           <b>{project.title}</b>
           <small>{project.category}</small>
@@ -480,7 +479,6 @@ function ProjectCard({ project }) {
     >
       <div className="project-image">
         <Visual item={project} />
-        <span>{project.id}</span>
       </div>
       <div className="project-body">
         <div className="project-meta">
@@ -602,7 +600,6 @@ function Projects() {
                   }}
                 >
                   <b>{category}</b>
-                  <span>{String(count).padStart(2, "0")}</span>
                 </button>
               );
             })}
@@ -618,7 +615,6 @@ function Projects() {
               ref={(el) => (groupsRef.current[index] = el)}
             >
               <header>
-                <span>0{index + 1}</span>
                 <h3>{category}</h3>
                 <span>
                   {projects.filter((p) => p.category === category).length} projects
