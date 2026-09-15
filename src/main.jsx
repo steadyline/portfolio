@@ -435,8 +435,49 @@ function ScrollGallery() {
 }
 
 function ProjectCard({ project }) {
+  const ref = useRef(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) { setProgress(1); return; }
+
+    let raf;
+    const calc = () => {
+      raf = null;
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const center = rect.top + rect.height / 2;
+      const dist = Math.abs(center - innerHeight / 2);
+      const max = innerHeight * 0.65;
+      setProgress(Math.max(0, Math.min(1, 1 - dist / max)));
+    };
+
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    calc();
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const scale = 0.88 + progress * 0.12;
+  const opacity = 0.25 + progress * 0.75;
+  const rotateX = (1 - progress) * 8;
+  const translateY = (1 - progress) * 30;
+
   return (
-    <article className="project-card">
+    <article
+      className="project-card"
+      ref={ref}
+      style={{
+        opacity,
+        transform: `perspective(1000px) rotateX(${rotateX}deg) translateY(${translateY}px) scale(${scale})`,
+      }}
+    >
       <div className="project-image">
         <Visual item={project} />
         <span>{project.id}</span>
@@ -474,73 +515,58 @@ function ProjectCard({ project }) {
 
 function Projects() {
   const [active, setActive] = useState(categories[0]);
-  const sceneRef = useRef(null);
-  const trackRef = useRef(null);
+  const [proximity, setProximity] = useState(categories.map(() => 0));
   const groupsRef = useRef([]);
+  const navRef = useRef(null);
 
   useEffect(() => {
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || innerWidth < 900) return;
-
     let raf;
-    const scene = sceneRef.current;
-    const track = trackRef.current;
-    if (!scene || !track) return;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const render = () => {
+    const calc = () => {
       raf = null;
-      const rect = scene.getBoundingClientRect();
-      const sceneHeight = scene.offsetHeight - innerHeight;
-      const progress = Math.max(0, Math.min(1, -rect.top / Math.max(sceneHeight, 1)));
-
-      const trackWidth = track.scrollWidth - innerWidth + 48;
-      const x = -progress * trackWidth;
-      track.style.transform = `translate3d(${x}px,0,0)`;
-
       const groups = groupsRef.current.filter(Boolean);
-      const centerX = innerWidth / 2;
-      groups.forEach((group) => {
-        const gRect = group.getBoundingClientRect();
-        const gCenter = gRect.left + gRect.width / 2;
-        const dist = Math.abs(gCenter - centerX);
-        const maxDist = innerWidth * 0.6;
-        const closeness = Math.max(0, 1 - dist / maxDist);
-        group.style.opacity = `${0.35 + closeness * 0.65}`;
-        group.style.transform = `scale(${0.92 + closeness * 0.08})`;
-        if (closeness > 0.55 && group.dataset.category !== active) {
-          setActive(group.dataset.category);
+      if (!groups.length) return;
+
+      const screenCenter = innerHeight / 2;
+      let bestIdx = 0;
+      let bestDist = Infinity;
+      const newProx = categories.map(() => 0);
+
+      groups.forEach((group, i) => {
+        const rect = group.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const dist = Math.abs(center - screenCenter);
+        const max = innerHeight * 0.55;
+        newProx[i] = Math.max(0, Math.min(1, 1 - dist / max));
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestIdx = i;
         }
       });
+
+      setProximity(newProx);
+      setActive(categories[bestIdx]);
     };
 
-    const update = () => {
-      if (!raf) raf = requestAnimationFrame(render);
-    };
-
-    render();
-    addEventListener("scroll", update, { passive: true });
-    addEventListener("resize", update);
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    calc();
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
     return () => {
-      removeEventListener("scroll", update);
-      removeEventListener("resize", update);
+      removeEventListener("scroll", onScroll);
+      removeEventListener("resize", onScroll);
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
 
   const goTo = (category) => {
-    setActive(category);
-    const group = groupsRef.current.find(
-      (g) => g && g.dataset.category === category,
-    );
+    const idx = categories.indexOf(category);
+    const group = groupsRef.current[idx];
     if (group) {
-      const scene = sceneRef.current;
-      const track = trackRef.current;
-      const sceneHeight = scene.offsetHeight - innerHeight;
-      const trackWidth = track.scrollWidth - innerWidth + 48;
-      const groupLeft = group.offsetLeft;
-      const progress = groupLeft / Math.max(trackWidth, 1);
-      const targetY = scene.offsetTop + progress * sceneHeight;
-      window.scrollTo({ top: targetY, behavior: "smooth" });
+      const rect = group.getBoundingClientRect();
+      const target = scrollY + rect.top - innerHeight * 0.3;
+      window.scrollTo({ top: target, behavior: "smooth" });
     }
   };
 
@@ -551,79 +577,61 @@ function Projects() {
         <h2>Selected work across<br />five disciplines.</h2>
       </div>
       <div className="projects-layout">
-        <aside>
-          <span>Categories</span>
-          {categories.map((category) => (
-            <button
-              className={active === category ? "active" : ""}
-              onClick={() => goTo(category)}
-              key={category}
-            >
-              <b>{category}</b>
-              <span>
-                {String(
-                  projects.filter((project) => project.category === category)
-                    .length,
-                ).padStart(2, "0")}
-              </span>
-            </button>
-          ))}
-        </aside>
-      </div>
-      <div className="projects-scene" ref={sceneRef}>
-        <div className="projects-sticky">
-          <div className="projects-track" ref={trackRef}>
-            {categories.map((category, index) => (
-              <section
-                className="project-group"
-                id={slug(category)}
-                data-category={category}
-                key={category}
-                ref={(el) => (groupsRef.current[index] = el)}
-              >
-                <header>
-                  <span>0{index + 1}</span>
-                  <h3>{category}</h3>
-                  <span>
-                    {projects.filter((p) => p.category === category).length} projects
-                  </span>
-                </header>
-                <div className="project-grid">
-                  {projects
-                    .filter((p) => p.category === category)
-                    .map((project) => (
-                      <ProjectCard key={project.id} project={project} />
-                    ))}
-                </div>
-              </section>
-            ))}
+        <aside ref={navRef}>
+          <span className="nav-label">Categories</span>
+          <div className="nav-wheel">
+            {categories.map((category, i) => {
+              const p = proximity[i];
+              const isActive = active === category;
+              const scale = 0.7 + p * 0.45;
+              const opacity = 0.2 + p * 0.8;
+              const blur = (1 - p) * 4;
+              const translateY = (1 - p) * (i < categories.indexOf(active) ? -20 : 20);
+              const count = projects.filter((proj) => proj.category === category).length;
+              return (
+                <button
+                  className={`nav-item ${isActive ? "active" : ""}`}
+                  onClick={() => goTo(category)}
+                  key={category}
+                  style={{
+                    transform: `scale(${scale}) translateY(${translateY}px)`,
+                    opacity,
+                    filter: blur > 0.1 ? `blur(${blur}px)` : "none",
+                  }}
+                >
+                  <b>{category}</b>
+                  <span>{String(count).padStart(2, "0")}</span>
+                </button>
+              );
+            })}
           </div>
+        </aside>
+        <div className="project-groups">
+          {categories.map((category, index) => (
+            <section
+              className="project-group"
+              id={slug(category)}
+              data-category={category}
+              key={category}
+              ref={(el) => (groupsRef.current[index] = el)}
+            >
+              <header>
+                <span>0{index + 1}</span>
+                <h3>{category}</h3>
+                <span>
+                  {projects.filter((p) => p.category === category).length} projects
+                </span>
+              </header>
+              <div className="project-grid">
+                {projects
+                  .filter((p) => p.category === category)
+                  .map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+              </div>
+            </section>
+          ))}
         </div>
-      </div>
-      <div className="projects-mobile">
-        {categories.map((category, index) => (
-          <section
-            className="project-group"
-            id={`${slug(category)}-m`}
-            data-category={category}
-            key={category}
-          >
-            <header>
-              <span>0{index + 1}</span>
-              <h3>{category}</h3>
-              <span>
-                {projects.filter((p) => p.category === category).length} projects
-              </span>
-            </header>
-            <div className="project-grid">
-              {projects
-                .filter((p) => p.category === category)
-                .map((project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-            </div>
-          </section>
-        ))}
       </div>
     </section>
   );

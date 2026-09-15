@@ -403,129 +403,134 @@ img {
 }
 .projects-layout {
   display: grid;
-  grid-template-columns: 230px minmax(0, 1fr);
-  gap: 54px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 64px;
   align-items: start;
 }
 .projects aside {
   position: sticky;
-  top: 105px;
-  padding-top: 34px;
+  top: 100px;
+  padding-top: 20px;
 }
-.projects aside > span {
+.nav-label {
   display: block;
-  margin-bottom: 18px;
+  margin-bottom: 24px;
   color: #525b68;
-  font: 500 9px "DM Mono";
+  font: 500 10px "DM Mono";
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.projects aside button {
-  width: 100%;
+.nav-wheel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 20px 0;
+  position: relative;
+}
+.nav-wheel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 60px;
+  transform: translateY(-50%);
+  background: linear-gradient(to bottom, transparent, var(--cyan), transparent);
+  opacity: 0.5;
+  border-radius: 2px;
+  pointer-events: none;
+}
+.nav-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  margin-bottom: 6px;
+  width: 100%;
+  padding: 16px 20px;
+  margin-bottom: 4px;
   border: 0;
-  border-radius: 10px;
+  border-radius: 14px;
   background: none;
-  color: #656d7a;
+  color: #4a5260;
   text-align: left;
   cursor: pointer;
-  transition: color 0.25s, background 0.25s, transform 0.25s;
+  transform-origin: left center;
+  transition: color 0.3s, background 0.3s;
+  will-change: transform, opacity, filter;
 }
-.projects aside button:hover {
+.nav-item:hover {
   color: #c8cdd6;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
 }
-.projects aside button b {
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+.nav-item b {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
-.projects aside button span {
-  font: 500 10px "DM Mono";
-  color: #4a5260;
+.nav-item span {
+  font: 600 12px "DM Mono";
+  color: #3a4150;
 }
-.projects aside button.active {
+.nav-item.active {
   color: #fff;
-  background: rgba(59, 210, 250, 0.08);
+  background: rgba(59, 210, 250, 0.06);
 }
-.projects aside button.active b {
+.nav-item.active b {
+  color: var(--cyan);
+  text-shadow: 0 0 24px rgba(59, 210, 250, 0.4);
+}
+.nav-item.active span {
   color: var(--cyan);
 }
-.projects aside button.active span {
-  color: var(--cyan);
-}
-.projects-scene {
-  position: relative;
-  height: 320vh;
-  margin-top: 40px;
-}
-.projects-sticky {
-  height: 100vh;
-  position: sticky;
-  top: 0;
+.project-groups {
   display: flex;
-  align-items: center;
-  overflow: hidden;
-  perspective: 1200px;
-}
-.projects-track {
-  display: flex;
-  gap: 80px;
-  padding: 0 max(24px, calc((100vw - 1280px) / 2));
-  will-change: transform;
+  flex-direction: column;
 }
 .project-group {
-  flex: 0 0 auto;
-  width: 480px;
-  scroll-margin-top: 76px;
-  transition: opacity 0.4s, transform 0.4s;
+  padding: 40px 0 80px;
+  scroll-margin-top: 90px;
 }
 .project-group > header {
   display: grid;
-  grid-template-columns: 38px 1fr auto;
+  grid-template-columns: 42px 1fr auto;
   align-items: center;
-  margin-bottom: 22px;
+  margin-bottom: 28px;
   color: #606a78;
 }
 .project-group > header > span {
-  font: 400 8px "DM Mono";
+  font: 500 10px "DM Mono";
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 .project-group > header h3 {
   margin: 0;
-  color: #e9edf2;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  color: #f0f3f8;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
 }
 .project-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 .project-card {
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 14px;
   background: #0d1016;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-  transform: perspective(1000px) rotateY(0deg);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  will-change: transform, opacity;
 }
 .project-card:hover {
-  transform: perspective(1000px) rotateY(-2deg) translateY(-4px);
-  border-color: rgba(59, 210, 250, 0.3);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  border-color: rgba(59, 210, 250, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(59, 210, 250, 0.1);
 }
 .projects-mobile {
   display: none;
 }
 .project-image {
-  height: 220px;
+  height: 240px;
   position: relative;
   overflow: hidden;
   background: #151820;
@@ -551,7 +556,7 @@ img {
   font: 400 7px "DM Mono";
 }
 .project-body {
-  padding: 20px;
+  padding: 24px;
 }
 .project-meta {
   display: flex;
@@ -565,17 +570,17 @@ img {
   width: 14px;
 }
 .project-body h3 {
-  margin: 12px 0 8px;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 0;
+  margin: 14px 0 10px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 .project-body > p {
-  min-height: 39px;
+  min-height: 42px;
   margin: 0;
   color: #949caa;
-  font-size: 12px;
-  line-height: 1.6;
+  font-size: 14px;
+  line-height: 1.65;
 }
 .project-proof {
   display: grid;
@@ -596,10 +601,10 @@ img {
 .project-proof > div:first-child > span {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
-  color: #b8c0cc;
-  font-size: 11px;
+  gap: 7px;
+  margin-top: 10px;
+  color: #c0c8d4;
+  font-size: 13px;
 }
 .project-proof > div:first-child svg {
   width: 12px;
@@ -611,16 +616,16 @@ img {
   gap: 5px;
 }
 .tech {
-  height: 34px;
+  height: 36px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 0 10px;
+  gap: 8px;
+  padding: 0 12px;
   border: 1px solid rgba(139, 147, 167, 0.28);
-  border-radius: 6px;
+  border-radius: 8px;
   background: #0a0d12;
   color: #aab3c0;
-  font: 400 10px "DM Mono";
+  font: 500 11px "DM Mono";
   white-space: nowrap;
   transition: border-color 0.2s, color 0.2s;
 }
@@ -904,23 +909,11 @@ footer#contact h2 {
     height: 190px;
   }
   .projects-layout {
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 30px;
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: 36px;
   }
-  .projects-scene {
-    display: none;
-  }
-  .projects-mobile {
-    display: block;
-  }
-  .projects-mobile .project-group {
-    width: 100%;
-    padding: 30px 0 55px;
-  }
-  .projects-mobile .project-grid {
-    display: grid;
+  .project-grid {
     grid-template-columns: 1fr;
-    gap: 18px;
   }
   .testimonials {
     grid-template-columns: 1fr;
@@ -999,29 +992,39 @@ footer#contact h2 {
     background: rgba(8, 10, 15, 0.94);
     backdrop-filter: blur(12px);
   }
-  .projects aside > span {
+  .nav-label {
     display: none;
   }
-  .projects aside button {
+  .nav-wheel {
+    flex-direction: row;
+    gap: 8px;
+    padding: 0;
+  }
+  .nav-wheel::before {
+    display: none;
+  }
+  .nav-item {
     min-width: max-content;
     height: 50px;
     padding: 0 16px;
     margin: 0;
-    border: 0;
     border-radius: 100px;
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
-  .projects aside button.active {
+  .nav-item.active {
     border-radius: 100px;
     background: rgba(59, 210, 250, 0.1);
   }
-  .projects aside button span {
+  .nav-item span {
     margin-left: 8px;
   }
-  .projects-mobile .project-group {
+  .project-group {
     padding: 30px 0 55px;
   }
   .project-group > header h3 {
-    font-size: 18px;
+    font-size: 20px;
   }
   .project-image {
     height: 205px;
@@ -1094,22 +1097,14 @@ footer#contact h2 {
   .gallery-card {
     scroll-snap-align: start;
   }
-  .projects-scene {
-    height: auto;
-  }
-  .projects-sticky {
-    height: auto;
-    position: relative;
-    overflow: visible;
-  }
-  .projects-track {
-    flex-wrap: wrap;
-    gap: 30px;
-  }
-  .project-group {
-    width: 100%;
+  .project-card {
     opacity: 1 !important;
     transform: none !important;
+  }
+  .nav-item {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
   }
   * {
     transition-duration: 0.01ms !important;
