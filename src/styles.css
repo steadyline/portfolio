@@ -423,9 +423,9 @@ img {
 .nav-wheel {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 20px 0;
+  align-items: stretch;
+  gap: 6px;
+  padding: 22px 0;
   position: relative;
 }
 .nav-wheel::before {
@@ -446,41 +446,46 @@ img {
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  min-height: 58px;
   padding: 16px 20px;
   margin-bottom: 4px;
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0.055);
   border-radius: 14px;
-  background: none;
-  color: #4a5260;
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(238, 243, 248, 0.62);
   text-align: left;
   cursor: pointer;
   transform-origin: left center;
-  transition: color 0.3s, background 0.3s;
+  transition: color 0.3s, background 0.3s, border-color 0.3s, box-shadow 0.3s;
   will-change: transform, opacity, filter;
 }
 .nav-item:hover {
-  color: #c8cdd6;
-  background: rgba(255, 255, 255, 0.03);
+  color: rgba(246, 249, 252, 0.9);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 .nav-item b {
   font-size: 20px;
   font-weight: 700;
   letter-spacing: -0.03em;
+  color: inherit;
 }
 .nav-item span {
   font: 600 12px "DM Mono";
-  color: #3a4150;
+  color: rgba(220, 229, 237, 0.42);
 }
 .nav-item.active {
-  color: #fff;
-  background: rgba(59, 210, 250, 0.06);
+  color: rgba(248, 251, 253, 0.94);
+  background: linear-gradient(105deg, rgba(59, 210, 250, 0.16), rgba(59, 210, 250, 0.045));
+  border-color: rgba(59, 210, 250, 0.32);
+  box-shadow: inset 3px 0 0 var(--cyan), 0 14px 32px rgba(0, 0, 0, 0.2);
 }
 .nav-item.active b {
-  color: var(--cyan);
-  text-shadow: 0 0 24px rgba(59, 210, 250, 0.4);
+  color: #f5fbff;
+  text-shadow: 0 0 24px rgba(59, 210, 250, 0.34);
 }
 .nav-item.active span {
-  color: var(--cyan);
+  color: rgba(139, 231, 250, 0.88);
 }
 .project-groups {
   display: flex;
@@ -1005,6 +1010,7 @@ footer#contact h2 {
   }
   .nav-item {
     min-width: max-content;
+    min-height: 50px;
     height: 50px;
     padding: 0 16px;
     margin: 0;

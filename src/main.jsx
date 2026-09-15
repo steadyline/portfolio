@@ -464,10 +464,10 @@ function ProjectCard({ project }) {
     };
   }, []);
 
-  const scale = 0.88 + progress * 0.12;
-  const opacity = 0.25 + progress * 0.75;
-  const rotateX = (1 - progress) * 8;
-  const translateY = (1 - progress) * 30;
+  const scale = 0.92 + progress * 0.08;
+  const opacity = 0.52 + progress * 0.48;
+  const rotateX = (1 - progress) * 4;
+  const translateY = (1 - progress) * 16;
 
   return (
     <article
@@ -531,20 +531,20 @@ function Projects() {
       const screenCenter = innerHeight / 2;
       let bestIdx = 0;
       let bestDist = Infinity;
-      const newProx = categories.map(() => 0);
 
       groups.forEach((group, i) => {
         const rect = group.getBoundingClientRect();
         const center = rect.top + rect.height / 2;
         const dist = Math.abs(center - screenCenter);
-        const max = innerHeight * 0.55;
-        newProx[i] = Math.max(0, Math.min(1, 1 - dist / max));
         if (dist < bestDist) {
           bestDist = dist;
           bestIdx = i;
         }
       });
 
+      const newProx = categories.map((_, i) =>
+        Math.max(0.34, 1 - Math.abs(i - bestIdx) * 0.19),
+      );
       setProximity(newProx);
       setActive(categories[bestIdx]);
     };
@@ -582,11 +582,13 @@ function Projects() {
           <div className="nav-wheel">
             {categories.map((category, i) => {
               const p = proximity[i];
+              const activeIndex = categories.indexOf(active);
               const isActive = active === category;
-              const scale = 0.7 + p * 0.45;
-              const opacity = 0.2 + p * 0.8;
-              const blur = (1 - p) * 4;
-              const translateY = (1 - p) * (i < categories.indexOf(active) ? -20 : 20);
+              const scale = 0.88 + p * 0.16;
+              const opacity = 0.5 + p * 0.5;
+              const blur = (1 - p) * 0.8;
+              const translateY = Math.sin((i - activeIndex) * 0.55) * 7;
+              const rotate = (i - activeIndex) * -1.5;
               const count = projects.filter((proj) => proj.category === category).length;
               return (
                 <button
@@ -594,7 +596,7 @@ function Projects() {
                   onClick={() => goTo(category)}
                   key={category}
                   style={{
-                    transform: `scale(${scale}) translateY(${translateY}px)`,
+                    transform: `translateY(${translateY}px) scale(${scale}) rotateZ(${rotate}deg)`,
                     opacity,
                     filter: blur > 0.1 ? `blur(${blur}px)` : "none",
                   }}
